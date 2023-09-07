@@ -21,4 +21,16 @@ class BookListByAuthorAPIView(generics.ListAPIView):
         author = AuthorModel.objects.get(user=user)
         return BookModel.objects.filter(author=author.id)
 
+    def filter_queryset(self, queryset):
+        params = self.request.query_params
+        name = params.get('name')
+        genre = params.get('genre')
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        if genre:
+            queryset = queryset.filter(genre__icontains=genre)
+
+        return queryset
 
